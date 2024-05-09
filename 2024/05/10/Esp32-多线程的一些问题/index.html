@@ -1,0 +1,317 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Esp32 多线程的一些问题 | LokiAnder</title><meta name="author" content="Andong Zhou"><meta name="copyright" content="Andong Zhou"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Esp32 多线程的一些问题前言这两天在做esp32的嵌入式方向的设备，期间发现一些相关的一些需要注意的点，在这里记录一下。 FreeRtos中队列阻塞问题由于我的开发平台是arduino，可以很轻松的使用freertos，同时程序里又用到了队列，所以我便当仁不让的用了freertos中的队列数据结构。本来呢，这个队列数据结构是用于任务之间的数据传输用的，特别是在生产者-消费者问题中非常有用。而我">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Esp32 多线程的一些问题">
+<meta property="og:url" content="https://lokiander.github.io/2024/05/10/Esp32-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="LokiAnder">
+<meta property="og:description" content="Esp32 多线程的一些问题前言这两天在做esp32的嵌入式方向的设备，期间发现一些相关的一些需要注意的点，在这里记录一下。 FreeRtos中队列阻塞问题由于我的开发平台是arduino，可以很轻松的使用freertos，同时程序里又用到了队列，所以我便当仁不让的用了freertos中的队列数据结构。本来呢，这个队列数据结构是用于任务之间的数据传输用的，特别是在生产者-消费者问题中非常有用。而我">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lokiander.github.io/img/139.jpg">
+<meta property="article:published_time" content="2024-05-09T17:57:24.000Z">
+<meta property="article:modified_time" content="2024-05-09T18:44:49.278Z">
+<meta property="article:author" content="Andong Zhou">
+<meta property="article:tag" content="毕业论文">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lokiander.github.io/img/139.jpg"><link rel="shortcut icon" href="/img/icon.png"><link rel="canonical" href="https://lokiander.github.io/2024/05/10/Esp32-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Andong Zhou","link":"链接: ","source":"来源: LokiAnder","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Esp32 多线程的一些问题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-05-10 02:44:49'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/corner-indicator.css?1"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/104025246_p0.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/139.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="LokiAnder"><span class="site-name">LokiAnder</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Esp32 多线程的一些问题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-05-09T17:57:24.000Z" title="发表于 2024-05-10 01:57:24">2024-05-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-05-09T18:44:49.278Z" title="更新于 2024-05-10 02:44:49">2024-05-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87/">毕业论文</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Esp32 多线程的一些问题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Esp32-多线程的一些问题"><a href="#Esp32-多线程的一些问题" class="headerlink" title="Esp32 多线程的一些问题"></a>Esp32 多线程的一些问题</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这两天在做esp32的嵌入式方向的设备，期间发现一些相关的一些需要注意的点，在这里记录一下。</p>
+<h2 id="FreeRtos中队列阻塞问题"><a href="#FreeRtos中队列阻塞问题" class="headerlink" title="FreeRtos中队列阻塞问题"></a>FreeRtos中队列阻塞问题</h2><p>由于我的开发平台是arduino，可以很轻松的使用freertos，同时程序里又用到了队列，所以我便当仁不让的用了freertos中的队列数据结构。本来呢，这个队列数据结构是用于任务之间的数据传输用的，特别是在生产者-消费者问题中非常有用。而我呢，单纯看在他作为队列的数据结构，省的自己写一个队列了，没想着这个队列在freertos的环境下会有阻塞的问题，其最直接的结果就是，我程序一开始跑起来了，但是没跑几步就不见了，就不见了！！！！！</p>
+<p>简单来说就是没声了，我一开始以为是跑到哪个线程中的死循环里去了吗？？或者说有哪个线程耗时太长了，把其他线程都给挤死啦？？？</p>
+<p>但最后才发现原来是这个队列的锅，这里为了以后的方便，顺便积累一下freertos环境中队列的使用：</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>在 FreeRTOS 中，队列允许你在多个任务之间发送消息（数据项），这些消息可以是任何数据类型，如整数、指针、数组或者更复杂的结构体。每个队列具有固定的长度和项大小，这些在创建队列时被确定。</p>
+<h3 id="创建和使用队列"><a href="#创建和使用队列" class="headerlink" title="创建和使用队列"></a>创建和使用队列</h3><p>要在 FreeRTOS 中使用队列，你需要执行以下步骤：</p>
+<ul>
+<li>创建队列：使用 <code>xQueueCreate()</code> 函数创建队列。</li>
+<li>发送数据到队列：可以使用 <code>xQueueSend()</code>, <code>xQueueSendToFront()</code>, <code>xQueueSendToBack()</code>, 和 <code>xQueueSendFromISR()</code> 等函数。</li>
+<li>从队列接收数据：可以使用 <code>xQueueReceive()</code> 和 <code>xQueueReceiveFromISR()</code> 等函数。</li>
+</ul>
+<h3 id="队列函数"><a href="#队列函数" class="headerlink" title="队列函数"></a>队列函数</h3><p>下面是一些常用的队列相关函数：</p>
+<ul>
+<li><p>xQueueCreate():</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueueHandle_t <span class="title function_">xQueueCreate</span><span class="params">(UBaseType_t uxQueueLength, UBaseType_t uxItemSize)</span>;</span><br></pre></td></tr></table></figure>
+<p>创建一个新队列。uxQueueLength 是队列可以持有的元素数量，uxItemSize 是每个元素的大小（字节）。</p>
+</li>
+<li><p>xQueueSend():</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BaseType_t <span class="title function_">xQueueSend</span><span class="params">(QueueHandle_t xQueue, <span class="type">const</span> <span class="type">void</span> *pvItemToQueue, TickType_t xTicksToWait)</span>;</span><br></pre></td></tr></table></figure>
+<p>向队列发送一个元素。如果队列已满，调用任务将等待指定的时间。</p>
+<blockquote>
+<p>顺便一提，出问题的就是这个xQueueSend，由于我以前一直用的是循环队列，不用考虑溢出的问题，而且一般编程的话一旦出现溢出会报错，但是在freertos中，它居然是阻塞！！！是阻塞！！！这难不成是期望其他核上的线程来救他嘛？？？😂😂😂😂</p>
+</blockquote>
+</li>
+<li><p>XQueueReceive():</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BaseType_t <span class="title function_">xQueueReceive</span><span class="params">(QueueHandle_t xQueue, <span class="type">void</span> *pvBuffer, TickType_t xTicksToWait)</span>;</span><br></pre></td></tr></table></figure>
+<p>从队列接收一个元素。如果队列为空，调用任务将等待指定的时间。</p>
+</li>
+</ul>
+<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;Arduino.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;FreeRTOS.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">QueueHandle_t xQueue;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">producerTask</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    <span class="type">int</span> valueToSend = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (xQueueSend(xQueue, &amp;valueToSend, portMAX_DELAY) == pdPASS) &#123;</span><br><span class="line">            Serial.print(<span class="string">&quot;Produced: &quot;</span>);</span><br><span class="line">            Serial.println(valueToSend);</span><br><span class="line">            valueToSend++;  <span class="comment">// 发送下一个值</span></span><br><span class="line">        &#125;</span><br><span class="line">        vTaskDelay(pdMS_TO_TICKS(<span class="number">1000</span>)); <span class="comment">// 每秒发送一次</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">consumerTask</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    <span class="type">int</span> valueReceived;</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (xQueueReceive(xQueue, &amp;valueReceived, portMAX_DELAY) == pdPASS) &#123;</span><br><span class="line">            Serial.print(<span class="string">&quot;Consumed: &quot;</span>);</span><br><span class="line">            Serial.println(valueReceived);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">setup</span><span class="params">()</span> &#123;</span><br><span class="line">    Serial.begin(<span class="number">9600</span>);</span><br><span class="line"></span><br><span class="line">    xQueue = xQueueCreate(<span class="number">10</span>, <span class="keyword">sizeof</span>(<span class="type">int</span>));</span><br><span class="line">    <span class="keyword">if</span> (xQueue == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        Serial.println(<span class="string">&quot;Failed to create queue&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    xTaskCreate(producerTask, <span class="string">&quot;Producer&quot;</span>, <span class="number">1000</span>, <span class="literal">NULL</span>, <span class="number">1</span>, <span class="literal">NULL</span>);</span><br><span class="line">    xTaskCreate(consumerTask, <span class="string">&quot;Consumer&quot;</span>, <span class="number">1000</span>, <span class="literal">NULL</span>, <span class="number">1</span>, <span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">loop</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 主循环保持空闲</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个示例中，我们创建了一个队列和两个任务：一个生产者任务和一个消费者任务。生产者任务每秒向队列发送一个递增的整数，而消费者任务从队列中接收这些整数并打印出来。</p>
+<h2 id="ESP32的核心数"><a href="#ESP32的核心数" class="headerlink" title="ESP32的核心数"></a>ESP32的核心数</h2><p>由于这次我设计的程序要求读取传感器数据，做一些运算同时还需要把获得的数据上传到后端，由于几个传感器都需要频繁采集，我就需要让系统随时把资源给到传感器采集的线程。而同时，要将数据上传这个步骤非常的耗时，而且不适合暂停，所以我一开始在做架构的时候还准备再加入一个单片机，用来专门做数据采集的工作，但是如果要再加入一个单片机的话就要考虑同步异步的问题，众所周知，本来在编程中出现线程、时序、锁等等就已经是个大工程，而如果这些问题再出现在嵌入式领域，额。。。。那就是灾难，耗时耗力。虽然那么麻烦，我当时是想“这也没办法嘛”。由于我之前用的一般是arm架构下的单片机，比如说stm32f407、stm32f103之类的，这些都是单核处理器，所以一开时就没多想。现在我知道了！！！！！</p>
+<h3 id="敲重点！！！"><a href="#敲重点！！！" class="headerlink" title="敲重点！！！"></a>敲重点！！！</h3><p>ESP32-S3 是由 Espressif Systems 开发的一款 Wi-Fi 和蓝牙双模系统级芯片（SoC），是 ESP32 系列的一部分，针对更高的性能和更丰富的功能进行了优化。ESP32-S3 在 ESP32 的基础上进行了多方面的改进，包括更强的处理能力、更多的 IO 口、以及增强的安全特性等。</p>
+<h3 id="核心架构"><a href="#核心架构" class="headerlink" title="核心架构"></a>核心架构</h3><p>ESP32-S3 使用了<code>两个 Xtensa® 32-bit LX7 微处理器核心</code>。这<code>两个核心可以独立处理任务</code>，也可以协同工作，提供高效的多任务处理能力。Xtensa LX7 是比较先进的处理器架构，相较于 ESP32 使用的 LX6 核心，LX7 提供了更好的性能和更低的功耗。此外，ESP32-S3 的 CPU 频率可达到 240 MHz。</p>
+<blockquote>
+<p>看到没！！看看！！ esp32-s3是双核，是高贵的双核！！！我可以左手写作业，右手吃饭。我可以左手查资料，右手上网！！！！</p>
+</blockquote>
+<h3 id="如何分配两个核心的工作！！"><a href="#如何分配两个核心的工作！！" class="headerlink" title="如何分配两个核心的工作！！"></a>如何分配两个核心的工作！！</h3><p>这里就需要介绍<code>xTaskCreatePinnedToCore</code>函数了，<code>xTaskCreatePinnedToCore</code> 是 ESP32 环境中 FreeRTOS 的一个函数，用于创建一个任务并将其固定（绑定）到指定的 CPU 核心上。ESP32 是一个双核处理器，有两个可用的核心（通常编号为核心 0 和核心 1）。使用 <code>xTaskCreatePinnedToCore</code> 可以把任务明确分配给特定的核心执行，这有助于任务管理和性能优化。</p>
+<h3 id="xTaskCreatePinnedToCore的参数"><a href="#xTaskCreatePinnedToCore的参数" class="headerlink" title="xTaskCreatePinnedToCore的参数"></a>xTaskCreatePinnedToCore的参数</h3><p>函数原型如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">BaseType_t <span class="title function_">xTaskCreatePinnedToCore</span><span class="params">(</span></span><br><span class="line"><span class="params">    TaskFunction_t pvTaskCode,</span></span><br><span class="line"><span class="params">    <span class="type">const</span> <span class="type">char</span> * <span class="type">const</span> pcName,</span></span><br><span class="line"><span class="params">    <span class="type">const</span> <span class="type">uint32_t</span> usStackDepth,</span></span><br><span class="line"><span class="params">    <span class="type">void</span> * <span class="type">const</span> pvParameters,</span></span><br><span class="line"><span class="params">    UBaseType_t uxPriority,</span></span><br><span class="line"><span class="params">    TaskHandle_t * <span class="type">const</span> pxCreatedTask,</span></span><br><span class="line"><span class="params">    <span class="type">const</span> BaseType_t xCoreID</span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
+<p>各个参数的具体含义如下：</p>
+<ul>
+<li><code>pvTaskCode</code>：任务函数的指针。这是任务开始执行时调用的函数。该函数必须具备 void func(void *param) 的形式。</li>
+<li><code>pcName</code>：任务的文本名字。这个名字不会用于核心的调度功能，但可用于调试目的。</li>
+<li><code>usStackDepth</code>：任务堆栈的大小，以字为单位。字的大小依据编译器和CPU架构可能有所不同（在 ESP32 中通常是 4 字节）。</li>
+<li><code>pvParameters</code>：传递给任务的参数，可以是指向任何类型的数据的指针。这个指针会被传递给任务函数。</li>
+<li><code>uxPriority</code>：任务的优先级。在 FreeRTOS 中，较高的数值表示较高的优先级。所有任务都应该具有一个优先级，系统会优先调度优先级更高的任务。</li>
+<li><code>pxCreatedTask</code>：任务句柄的指针。如果不需要使用任务句柄，可以设置为 NULL。任务句柄可以用于以后对任务的引用，例如删除任务或更改其优先级等。</li>
+<li><code>xCoreID</code>：指定任务应该运行的核心 ID。ESP32 的核心通常编号为 0 和 1。如果你将此参数设置为 tskNO_AFFINITY（通常定义为 -1），任务将不会被固定到任何特定的核心，而是由操作系统调度到任意一个可用核心。<blockquote>
+<p>敲重点来了！！！看到<code>xCoreID</code>嘛！！！这就是和普通freertos不同的地方了。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h3><p>下面是一个使用 <code>xTaskCreatePinnedToCore</code> 的简单示例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">TaskFunction</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        <span class="comment">// 执行一些任务</span></span><br><span class="line">        vTaskDelay(<span class="number">1000</span> / portTICK_PERIOD_MS); <span class="comment">// 延时1秒</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">setup</span><span class="params">()</span> &#123;</span><br><span class="line">    xTaskCreatePinnedToCore(</span><br><span class="line">        TaskFunction,        <span class="comment">// 任务函数</span></span><br><span class="line">        <span class="string">&quot;Task1&quot;</span>,             <span class="comment">// 任务名称</span></span><br><span class="line">        <span class="number">2048</span>,                <span class="comment">// 堆栈大小</span></span><br><span class="line">        <span class="literal">NULL</span>,                <span class="comment">// 传递给任务的参数</span></span><br><span class="line">        <span class="number">1</span>,                   <span class="comment">// 任务优先级</span></span><br><span class="line">        <span class="literal">NULL</span>,                <span class="comment">// 任务句柄</span></span><br><span class="line">        <span class="number">0</span>                    <span class="comment">// 固定到核心 0</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">loop</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 主循环什么也不做</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个示例中，我们创建了一个简单的任务，并将其固定在 CPU 的核心 0 上。这个任务简单地在无限循环中每秒执行一次延时。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://LokiAnder.github.io">Andong Zhou</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://lokiander.github.io/2024/05/10/Esp32-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/">https://lokiander.github.io/2024/05/10/Esp32-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://LokiAnder.github.io" target="_blank">LokiAnder</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87/">毕业论文</a></div><div class="post_share"><div class="social-share" data-image="/img/139.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/04/22/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87%E6%97%A5%E7%A8%8B%E8%A1%A8/" title="毕业论文日程表"><img class="cover" src="/img/elPGAnh9zGM6klJLimfWiPdpkU4=.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">毕业论文日程表</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/04/22/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87%E6%97%A5%E7%A8%8B%E8%A1%A8/" title="毕业论文日程表"><img class="cover" src="/img/elPGAnh9zGM6klJLimfWiPdpkU4=.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-22</div><div class="title">毕业论文日程表</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/104025246_p0.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Andong Zhou</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/LokiAnder" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:anderloki56@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Esp32-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">Esp32 多线程的一些问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FreeRtos%E4%B8%AD%E9%98%9F%E5%88%97%E9%98%BB%E5%A1%9E%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">FreeRtos中队列阻塞问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.2.1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%92%8C%E4%BD%BF%E7%94%A8%E9%98%9F%E5%88%97"><span class="toc-number">1.2.2.</span> <span class="toc-text">创建和使用队列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%9F%E5%88%97%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">队列函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">1.2.4.</span> <span class="toc-text">示例代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ESP32%E7%9A%84%E6%A0%B8%E5%BF%83%E6%95%B0"><span class="toc-number">1.3.</span> <span class="toc-text">ESP32的核心数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B2%E9%87%8D%E7%82%B9%EF%BC%81%EF%BC%81%EF%BC%81"><span class="toc-number">1.3.1.</span> <span class="toc-text">敲重点！！！</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84"><span class="toc-number">1.3.2.</span> <span class="toc-text">核心架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%88%86%E9%85%8D%E4%B8%A4%E4%B8%AA%E6%A0%B8%E5%BF%83%E7%9A%84%E5%B7%A5%E4%BD%9C%EF%BC%81%EF%BC%81"><span class="toc-number">1.3.3.</span> <span class="toc-text">如何分配两个核心的工作！！</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xTaskCreatePinnedToCore%E7%9A%84%E5%8F%82%E6%95%B0"><span class="toc-number">1.3.4.</span> <span class="toc-text">xTaskCreatePinnedToCore的参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.3.5.</span> <span class="toc-text">使用示例</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/05/10/Esp32-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" title="Esp32 多线程的一些问题"><img src="/img/139.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Esp32 多线程的一些问题"/></a><div class="content"><a class="title" href="/2024/05/10/Esp32-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/" title="Esp32 多线程的一些问题">Esp32 多线程的一些问题</a><time datetime="2024-05-09T17:57:24.000Z" title="发表于 2024-05-10 01:57:24">2024-05-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/22/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87%E6%97%A5%E7%A8%8B%E8%A1%A8/" title="毕业论文日程表"><img src="/img/elPGAnh9zGM6klJLimfWiPdpkU4=.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="毕业论文日程表"/></a><div class="content"><a class="title" href="/2024/04/22/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87%E6%97%A5%E7%A8%8B%E8%A1%A8/" title="毕业论文日程表">毕业论文日程表</a><time datetime="2024-04-22T05:14:12.000Z" title="发表于 2024-04-22 13:14:12">2024-04-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/20/Flask-vue%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="Flask-vue服务器架构"><img src="/img/20220721174522_4f0ba.thumb.1000_0.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Flask-vue服务器架构"/></a><div class="content"><a class="title" href="/2024/04/20/Flask-vue%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="Flask-vue服务器架构">Flask-vue服务器架构</a><time datetime="2024-04-20T08:40:35.000Z" title="发表于 2024-04-20 16:40:35">2024-04-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/18/%E5%9F%BA%E4%BA%8EMAX30102%E7%9A%84%E4%BD%93%E5%BE%81%E6%95%B0%E6%8D%AE%E6%A3%80%E6%B5%8B/" title="基于MAX30102的体征数据检测算法"><img src="/img/a1a9b46b8a0dc3c3a5c496f07ec8abac2511ac52.jpg_1256w_1986h__web-article-pic.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基于MAX30102的体征数据检测算法"/></a><div class="content"><a class="title" href="/2024/04/18/%E5%9F%BA%E4%BA%8EMAX30102%E7%9A%84%E4%BD%93%E5%BE%81%E6%95%B0%E6%8D%AE%E6%A3%80%E6%B5%8B/" title="基于MAX30102的体征数据检测算法">基于MAX30102的体征数据检测算法</a><time datetime="2024-04-18T08:06:12.000Z" title="发表于 2024-04-18 16:06:12">2024-04-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/14/%E5%BB%BA%E7%AB%8Bphpmyadmin%E5%B9%B3%E5%8F%B0/" title="建立phpmyadmin平台"><img src="/img/117754438_p0_master1200.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="建立phpmyadmin平台"/></a><div class="content"><a class="title" href="/2024/04/14/%E5%BB%BA%E7%AB%8Bphpmyadmin%E5%B9%B3%E5%8F%B0/" title="建立phpmyadmin平台">建立phpmyadmin平台</a><time datetime="2024-04-13T18:08:31.000Z" title="发表于 2024-04-14 02:08:31">2024-04-14</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/139.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2024 By Andong Zhou</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://LokiAnder.github.io">blog</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">簡</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="/js/tw_cn.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script src="/js/pace.min.js?1"></script><div class="aplayer no-destroy" data-id="9173518549" data-server="netease" autoplay=true data-type="playlist" data-fixed="true" data-autoplay="false"> </div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body></html>
