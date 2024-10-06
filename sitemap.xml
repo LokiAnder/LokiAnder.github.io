@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://lokiander.github.io/pose-detection/index.html</loc>
+    
+    <lastmod>2024-10-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://lokiander.github.io/2024/09/26/%E4%B8%80%E5%88%86%E9%92%9F%E6%8E%8C%E6%8F%A1%EF%BC%81%E5%8C%85%E5%90%AB%E5%8F%82%E6%95%B0%E7%9A%84%E9%BB%98%E8%AE%A4%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F%EF%BC%81/</loc>
     
     <lastmod>2024-09-26</lastmod>
@@ -292,7 +301,7 @@
 
   <url>
     <loc>https://lokiander.github.io/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -300,182 +309,182 @@
   
   <url>
     <loc>https://lokiander.github.io/tags/%E5%BB%BA%E6%A8%A1%E5%B7%A5%E5%85%B7/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E5%8F%8C%E6%8C%87%E9%92%88/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E8%AE%BA%E6%96%87/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E6%9E%9A%E4%B8%BE/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E5%89%8D%E7%BC%80%E5%92%8C/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/Markdown/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E6%8E%92%E5%BA%8F/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/Math/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/AUV/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E8%B4%AA%E5%BF%83/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E6%A0%A1%E5%9B%AD%E9%82%A3%E4%BA%9B%E4%BA%8B/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E6%AF%95%E4%B8%9A%E8%AF%BE%E9%A2%98/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/mysql/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/MAX30102/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/Flask/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/Vue/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/excel/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/Git%E6%93%8D%E4%BD%9C/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E5%8A%9B%E6%89%A3/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/hardware/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/tags/%E8%AE%B0%E5%BD%95bug/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -484,84 +493,84 @@
   
   <url>
     <loc>https://lokiander.github.io/categories/Fusion360/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/categories/%E5%8A%9B%E6%89%A3/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/categories/%E8%AE%BA%E6%96%87/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/categories/%E6%92%B0%E5%86%99%E6%8A%80%E5%B7%A7/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/categories/%E5%9D%90%E6%A0%87%E7%B3%BB%E5%8F%98%E6%8D%A2/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/categories/%E6%AF%95%E4%B8%9A%E8%AF%BE%E9%A2%98/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/categories/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/categories/excel/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/categories/%E7%BC%96%E7%A8%8B/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/categories/%E5%AF%BC%E5%B8%88%E9%A1%B9%E7%9B%AE/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/categories/%E7%A1%AC%E4%BB%B6/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://lokiander.github.io/categories/%E8%AE%B0%E5%BD%95bug/</loc>
-    <lastmod>2024-10-01</lastmod>
+    <lastmod>2024-10-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
